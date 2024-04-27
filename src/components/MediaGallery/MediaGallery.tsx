@@ -1,13 +1,21 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { Plus, X, Save } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { Plus, Save, X } from "lucide-react";
 import { CldImage } from "next-cloudinary";
+import Link from "next/link";
+import { useState } from "react";
 
 import Container from "@/components/Container";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,13 +23,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
 
 interface CloudinaryResource {
   public_id: string;
@@ -34,7 +35,16 @@ interface MediaGalleryProps {
   resources: Array<CloudinaryResource>;
 }
 
-const MediaGallery = ({ resources }: MediaGalleryProps) => {
+const MediaGallery = ({ resources: initialResources }: MediaGalleryProps) => {
+  const { data: resources } = useQuery({
+    queryKey: ["resources"],
+    queryFn: async () => {
+      const { data } = await fetch("/api/resources").then((r) => r.json());
+      return data;
+    },
+    initialData: initialResources,
+  });
+
   const [selected, setSelected] = useState<Array<string>>([]);
   const [creation, setCreation] = useState();
 
