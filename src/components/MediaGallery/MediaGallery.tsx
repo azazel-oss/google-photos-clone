@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Plus, X, Save } from "lucide-react";
+import { CldImage } from "next-cloudinary";
 
 import Container from "@/components/Container";
 import { Button } from "@/components/ui/button";
@@ -157,11 +158,12 @@ const MediaGallery = ({ resources }: MediaGalleryProps) => {
                         className={`block cursor-pointer border-8 transition-[border] ${isChecked ? "border-blue-500" : "border-white"}`}
                         href="#"
                       >
-                        <img
+                        <CldImage
                           width={resource.width}
                           height={resource.height}
-                          src={resource.secure_url}
+                          src={resource.public_id}
                           alt="Cloudinary Logo"
+                          sizes="(min-width: 768px) 33vw, (min-widh: 1024px) 25vw, (min-width: 1280px) 20vw, 50vw"
                         />
                       </Link>
                     </div>
@@ -177,4 +179,3 @@ const MediaGallery = ({ resources }: MediaGalleryProps) => {
 };
 
 export default MediaGallery;
-
